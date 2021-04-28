@@ -1,34 +1,46 @@
 package com.reign.lofty.space.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.reign.lofty.space.entities.enums.WorkType;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Table(name = "tb_works")
 public class Work implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false, length = 5000)
     private String synopsis;
+    @Column(nullable = false)
     private String genre;
-    private String type;
+    @Column(nullable = false)
+    private Integer type;
+    @Column
     private String status;
+    @Column(nullable = false)
     private String distributedBy;
+    @Column(length = 1920)
     private byte[] cover;
+
+    @OneToMany(mappedBy = "work")
+    private List<Chapter> chapters = new ArrayList<>();
 
     public Work() {}
 
-    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
+    public Work(Long id, String title, String synopsis, String genre, WorkType workType, String status, String distributedBy, byte[] cover) {
         this.id = id;
         this.title = title;
         this.synopsis = synopsis;
         this.genre = genre;
-        this.type = type;
+        setType(workType);
         this.status = status;
         this.distributedBy = distributedBy;
         this.cover = cover;
@@ -58,11 +70,12 @@ public class Work implements Serializable {
     public void setGenre(String genre) {
         this.genre = genre;
     }
-    public String getType() {
-        return type;
+    public WorkType getType() {
+        return WorkType.valueOf(type);
     }
-    public void setType(String type) {
-        this.type = type;
+    public void setType(WorkType workType) {
+        if(workType != null)
+        this.type = workType.getCode();
     }
     public String getStatus() {
         return status;
@@ -81,6 +94,9 @@ public class Work implements Serializable {
     }
     public void setCover(byte[] cover) {
         this.cover = cover;
+    }
+    public List<Chapter> getChapters() {
+        return chapters;
     }
 
     @Override
