@@ -4,10 +4,13 @@ import com.reign.lofty.space.entities.Work;
 import com.reign.lofty.space.entities.enums.WorkType;
 import com.reign.lofty.space.services.interfaces.CoverStorage;
 import com.reign.lofty.space.services.interfaces.ContentAccess;
+import com.reign.lofty.space.services.interfaces.DeleteFile;
 import com.reign.lofty.space.services.interfaces.SeparateDescription;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.web.jsf.FacesContextUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -19,7 +22,8 @@ import java.util.stream.Stream;
 
 public class RecoverSaikaiManga extends Work implements ContentAccess,
                                                         SeparateDescription,
-                                                        CoverStorage {
+                                                        CoverStorage,
+                                                        DeleteFile {
 
     private Document doc;
     private String url = "https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/9";
@@ -41,6 +45,7 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
 
             RecoverSaikaiManga sm = new RecoverSaikaiManga();
             sm.setTitle(doc.select("h2").text());
+            File path = new File("src/main/resources/page/" + sm.getTitle());
             sm.setSynopsis(doc.select("div[class=summary-text]").text());
             sm.setGenre(description(doc, "div[class=info]", "nero"));
             sm.setStatus(description(doc, "div[class=info]", "Status"));
@@ -49,6 +54,8 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
             byte[] cover = recoverCover(coverUrl, sm.getTitle());
             sm.setCover(cover);
             sm.setType(WorkType.MANGA);
+
+//            deleteFile(path);
 
             return sm;
         } catch (Exception e) {
@@ -85,6 +92,18 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
         }
 
         return cover;
+    }
+
+    @Override
+    public boolean deleteFile(File path) {
+        try {
+            FileUtils.deleteDirectory(new File(String.valueOf(path)));
+            System.out.println("Sucesso ao deletar!");
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 
     @Override

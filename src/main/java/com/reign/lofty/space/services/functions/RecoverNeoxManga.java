@@ -4,6 +4,8 @@ import com.reign.lofty.space.entities.Work;
 import com.reign.lofty.space.entities.enums.WorkType;
 import com.reign.lofty.space.services.interfaces.CoverStorage;
 import com.reign.lofty.space.services.interfaces.ContentAccess;
+import com.reign.lofty.space.services.interfaces.DeleteFile;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -12,10 +14,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RecoverNeoxManga extends Work implements ContentAccess,
-                                                      CoverStorage {
+                                                      CoverStorage,
+                                                      DeleteFile {
 
     private Document doc;
-    private String url = "https://neoxscans.net/manga/t-4989797564478-m/";
+    private String url = "https://neoxscans.net/manga/o-comeco-depois-do-fim-89327/";
 
     public RecoverNeoxManga() {
     }
@@ -35,6 +38,7 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
 
             RecoverNeoxManga nm = new RecoverNeoxManga();
             nm.setTitle(doc.select("h1").text());
+            File path = new File("src/main/resources/page/" + nm.getTitle());
             nm.setSynopsis(doc.select("div[class=\"summary__content \"]").text());
             nm.setGenre(doc.select("div[class=genres-content]").text());
             nm.setStatus(doc.select("div.summary-content").last().text());
@@ -43,6 +47,8 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
             byte[] cover = recoverCover(coverUrl, nm.getTitle());
             nm.setCover(cover);
             nm.setType(WorkType.MANGA);
+
+//            deleteFile(path);
 
             return nm;
         } catch (Exception e) {
@@ -79,5 +85,17 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
         }
 
         return cover;
+    }
+
+    @Override
+    public boolean deleteFile(File path) {
+        try {
+            FileUtils.deleteDirectory(new File(String.valueOf(path)));
+            System.out.println("Sucesso ao deletar!");
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 }

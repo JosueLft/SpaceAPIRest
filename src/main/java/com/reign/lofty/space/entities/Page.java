@@ -12,7 +12,7 @@ public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1920)
     private byte[] page;
     @Column(nullable = false)
     private String workChapterName;
@@ -25,6 +25,11 @@ public class Page {
     private Chapter chapter;
 
     public Page() {
+    }
+
+    public Page(byte[] page, int numberPage) {
+        this.page = page;
+        this.numberPage = numberPage;
     }
 
     public Page(Long id, byte[] page, String workChapterName, int numberPage, Chapter chapter) {
@@ -58,6 +63,12 @@ public class Page {
     }
     public void setWorkChapterName(String workChapterName) {
         this.workChapterName = workChapterName;
+    }
+    public int getNumberPage() {
+        return numberPage;
+    }
+    public void setNumberPage(int numberPage) {
+        this.numberPage = numberPage;
     }
 
     @Override
