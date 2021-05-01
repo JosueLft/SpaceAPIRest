@@ -27,7 +27,7 @@ public class Work implements Serializable {
     private String status;
     @Column(nullable = false)
     private String distributedBy;
-    @Column(length = 1920)
+    @Column(length = 1000000)
     private byte[] cover;
 
     @OneToMany(mappedBy = "work")

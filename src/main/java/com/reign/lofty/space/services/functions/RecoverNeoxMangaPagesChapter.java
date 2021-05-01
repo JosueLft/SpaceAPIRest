@@ -13,11 +13,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
                                                                VerifyChapterTitle{
 
     Document doc;
-    String url = "https://neoxscans.net/manga/o-comeco-depois-do-fim-89327/cap-103/";
+    String url = "https://neoxscans.net/manga/rtw-2347897123/cap-252/";
 
     @Override
     public List<Page> accessContent(String workName) {
@@ -36,32 +36,24 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
             Chapter chapter = new Chapter();
             Page p;
             doc = Jsoup.connect(url).get();
-            /**
-             * Não está funcionando a forma de recuperar a URL das paginas
-             */
-//            String imgs = doc.select("div[class=\"page-break no-gaps\"] img").attr("data-src");
-            Elements imgs = doc.select("div[class=\"page-break no-gaps\"]");
+            Elements imgs = doc.select("div[class=\"page-break no-gaps\"] img");
 
-            String chapterTitle = chapterTitle(doc.select("div.images-block img").attr("title"));
+            String chapterTitle = doc.select("li.active").text();
             File path = new File("src/main/resources/page/" + workName);
 
-            imgs.forEach(img -> System.out.println(img.attr("src")));
-
-//            for (Element img : imgs) {
-//                p = new Page(
-//                        page(
-//                                new URL("https://saikaiscan.com.br/" + img.attr("src")),
-//                                workName + chapterTitle + "Page" + img.attr("data-number"),
-//                                path
-//                        ),
-//                        Integer.parseInt(img.attr("data-number"))
-//                );
-//                p.setWorkChapterName(workName + chapterTitle + "Page" + p.getNumberPage());
-//                chapter.getPages().add(p);
-//            }
-
-//            deleteFile(path);
-            return new ArrayList<>();
+            for (Element img : imgs) {
+                p = new Page(
+                        page(
+                                new URL(img.attr("data-src")),
+                                workName + chapterTitle + "Page" + img.id(),
+                                path
+                        ),
+                        img.id()
+                );
+                p.setWorkChapterName(workName + chapterTitle + "Page" + p.getNumberPage());
+                chapter.getPages().add(p);
+            }
+            return chapter.getPages();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,33 +62,25 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
 
     @Override
     public byte[] page(URL pageUrl, String workName, File path) {
-        byte[] cover = new byte[1024];
         OutputStream output = null;
         try {
-            path.mkdirs();
-            HttpURLConnection connection = (HttpURLConnection) pageUrl.openConnection();
-            InputStream input = connection.getInputStream();
-            output = new FileOutputStream(path + "/" + workName + "Chapter.png");
-            int read = 0;
-            while ((read = input.read(cover)) != -1) {
-                output.write(cover, 0, read);
-            }
+            BufferedImage imagem = null;
+            imagem = ImageIO.read(pageUrl);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            ImageIO.write(imagem, "JPEG", baos);
+            File f = path;
+            f.mkdir();
+            byte[] cover = baos.toByteArray();
+//            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
+//            ImageIO.write(imagem, "JPEG", output);
+
             return cover;
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            try {
-                if (output != null) {
-                    output.close();
-                }
-            } catch (IOException ex) {
-                ex.getMessage();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return cover;
+        return new byte[0];
     }
 
     @Override

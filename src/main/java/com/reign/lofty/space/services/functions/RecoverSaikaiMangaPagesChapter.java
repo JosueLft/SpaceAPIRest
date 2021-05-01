@@ -12,6 +12,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,7 +48,7 @@ public class RecoverSaikaiMangaPagesChapter extends Work implements AccessPageCo
                                 workName + chapterTitle + "Page" + img.attr("data-number"),
                                 path
                         ),
-                        Integer.parseInt(img.attr("data-number"))
+                        img.attr("data-number")
                 );
                 p.setWorkChapterName(workName + chapterTitle + "Page" + p.getNumberPage());
                 chapter.getPages().add(p);
@@ -62,33 +64,25 @@ public class RecoverSaikaiMangaPagesChapter extends Work implements AccessPageCo
 
     @Override
     public byte[] page(URL pageUrl, String workName, File path) {
-        byte[] cover = new byte[1024];
         OutputStream output = null;
         try {
-            path.mkdirs();
-            HttpURLConnection connection = (HttpURLConnection) pageUrl.openConnection();
-            InputStream input = connection.getInputStream();
-            output = new FileOutputStream(path + "/" + workName + "Chapter.png");
-            int read = 0;
-            while ((read = input.read(cover)) != -1) {
-                output.write(cover, 0, read);
-            }
+            BufferedImage imagem = null;
+            imagem = ImageIO.read(pageUrl);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            ImageIO.write(imagem, "JPEG", baos);
+            File f = path;
+            f.mkdir();
+            byte[] cover = baos.toByteArray();
+//            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
+//            ImageIO.write(imagem, "JPEG", output);
+
             return cover;
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            try {
-                if (output != null) {
-                    output.close();
-                }
-            } catch (IOException ex) {
-                ex.getMessage();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return cover;
+        return new byte[0];
     }
 
     @Override

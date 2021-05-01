@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class RecoverNeoxMangaChapter extends Work implements AccessChapterContent {
 
     Document doc;
-    String url = "https://neoxscans.net/manga/o-comeco-depois-do-fim-89327/cap-103/";
+    String url = "https://neoxscans.net/manga/rtw-2347897123/cap-252/";
 
     @Override
     public Chapter accessContent(String workName) {

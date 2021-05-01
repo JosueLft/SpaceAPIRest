@@ -12,12 +12,11 @@ public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, length = 1920)
+    @Column(nullable = false, length = 100000000)
     private byte[] page;
-    @Column(nullable = false)
     private String workChapterName;
-    @Column(nullable = false)
-    private int numberPage;
+    @Column(nullable = false, length = 10)
+    private String numberPage;
 
     @JsonIgnore
     @ManyToOne
@@ -27,12 +26,12 @@ public class Page {
     public Page() {
     }
 
-    public Page(byte[] page, int numberPage) {
+    public Page(byte[] page, String numberPage) {
         this.page = page;
         this.numberPage = numberPage;
     }
 
-    public Page(Long id, byte[] page, String workChapterName, int numberPage, Chapter chapter) {
+    public Page(Long id, byte[] page, String workChapterName, String numberPage, Chapter chapter) {
         this.id = id;
         this.page = page;
         this.workChapterName = workChapterName;
@@ -64,10 +63,10 @@ public class Page {
     public void setWorkChapterName(String workChapterName) {
         this.workChapterName = workChapterName;
     }
-    public int getNumberPage() {
+    public String getNumberPage() {
         return numberPage;
     }
-    public void setNumberPage(int numberPage) {
+    public void setNumberPage(String numberPage) {
         this.numberPage = numberPage;
     }
 

@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -65,32 +67,23 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
 
     @Override
     public byte[] recoverCover(URL coverUrl, String workName) {
-        byte[] cover = new byte[1024];
         OutputStream output = null;
         try {
-            HttpURLConnection connection = (HttpURLConnection) coverUrl.openConnection();
-            InputStream input = connection.getInputStream();
-            output = new FileOutputStream("src/main/resources/img/" + workName + "Cover.png");
-            int read = 0;
-            while ((read = input.read(cover)) != -1) {
-                output.write(cover, 0, read);
-            }
+            BufferedImage imagem = null;
+            imagem = ImageIO.read(coverUrl);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            ImageIO.write(imagem, "JPEG", baos);
+            byte[] cover = baos.toByteArray();
+//            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
+//            ImageIO.write(imagem, "JPEG", output);
+
             return cover;
-        } catch (FileNotFoundException ex) {
-            ex.getMessage();
-        } catch (IOException ex) {
-            ex.getMessage();
-        } finally {
-            try {
-                if (output != null) {
-                    output.close();
-                }
-            } catch (IOException ex) {
-                ex.getMessage();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return cover;
+        return new byte[0];
     }
 
     @Override

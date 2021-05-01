@@ -51,7 +51,7 @@ public class TestConfig implements CommandLineRunner {
         Chapter neoxMangaChapter = nmc.accessContent(w3.getTitle());
 
         List<Page> saikaiPages = smpc.accessContent(w1.getTitle());
-        List<Page> neoxPages = nmpc.accessContent(w1.getTitle());
+        List<Page> neoxPages = nmpc.accessContent(w3.getTitle());
 
         Chapter c1 = new Chapter(null, saikaiMangaChapter.getTitle(), Instant.now(), "Manga Chapter", w1);
         Chapter c2 = new Chapter(null, neoxMangaChapter.getTitle(), Instant.parse("2021-04-28T03:42:10Z"), "Manga Chapter", w3);
@@ -62,6 +62,11 @@ public class TestConfig implements CommandLineRunner {
 
         for (Page page : saikaiPages) {
             Page p1 = new Page(null, page.getPage(), page.getWorkChapterName(), page.getNumberPage(), c1);
+            pageRepository.saveAll(Arrays.asList(p1));
+        }
+
+        for (Page page : neoxPages) {
+            Page p1 = new Page(null, page.getPage(), page.getWorkChapterName(), page.getNumberPage(), c2);
             pageRepository.saveAll(Arrays.asList(p1));
         }
     }
