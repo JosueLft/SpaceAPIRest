@@ -20,7 +20,7 @@ public class Chapter implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String title;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT")
     private Instant moment;
     @Column(nullable = true)
     private String contentChapter;

@@ -16,8 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RecoverNeoxManga extends Work implements ContentAccess,
-                                                      CoverStorage,
-                                                      DeleteFile {
+                                                      CoverStorage {
 
     private Document doc;
     private String url = "https://neoxscans.net/manga/rtw-2347897123/";
@@ -40,7 +39,6 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
 
             RecoverNeoxManga nm = new RecoverNeoxManga();
             nm.setTitle(doc.select("h1").text());
-            File path = new File("src/main/resources/page/" + nm.getTitle());
             nm.setSynopsis(doc.select("div[class=\"summary__content \"]").text());
             nm.setGenre(doc.select("div[class=genres-content]").text());
             nm.setStatus(doc.select("div.summary-content").last().text());
@@ -49,8 +47,6 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
             byte[] cover = recoverCover(coverUrl, nm.getTitle());
             nm.setCover(cover);
             nm.setType(WorkType.MANGA);
-
-//            deleteFile(path);
 
             return nm;
         } catch (Exception e) {
@@ -78,17 +74,5 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
         }
 
         return new byte[0];
-    }
-
-    @Override
-    public boolean deleteFile(File path) {
-        try {
-            FileUtils.deleteDirectory(new File(String.valueOf(path)));
-            System.out.println("Sucesso ao deletar!");
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
     }
 }

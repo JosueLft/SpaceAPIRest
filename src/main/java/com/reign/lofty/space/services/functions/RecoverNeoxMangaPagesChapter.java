@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageContent,
                                                                PageStorage,
-                                                               DeleteFile,
                                                                VerifyChapterTitle{
 
     Document doc;
@@ -69,12 +68,9 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             ImageIO.write(imagem, "JPEG", baos);
-            File f = path;
-            f.mkdir();
             byte[] cover = baos.toByteArray();
 //            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
 //            ImageIO.write(imagem, "JPEG", output);
-
             return cover;
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,17 +93,5 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
             return title;
         }
         return attr;
-    }
-
-    @Override
-    public boolean deleteFile(File path) {
-        try {
-            FileUtils.deleteDirectory(new File(String.valueOf(path)));
-            System.out.println("Sucesso ao deletar!");
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
     }
 }

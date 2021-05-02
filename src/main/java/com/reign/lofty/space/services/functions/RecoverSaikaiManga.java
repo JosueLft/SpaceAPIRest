@@ -24,11 +24,10 @@ import java.util.stream.Stream;
 
 public class RecoverSaikaiManga extends Work implements ContentAccess,
                                                         SeparateDescription,
-                                                        CoverStorage,
-                                                        DeleteFile {
+                                                        CoverStorage {
 
     private Document doc;
-    private String url = "https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/9";
+    private String url;
 
     public RecoverSaikaiManga() {}
 
@@ -47,7 +46,6 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
 
             RecoverSaikaiManga sm = new RecoverSaikaiManga();
             sm.setTitle(doc.select("h2").text());
-            File path = new File("src/main/resources/page/" + sm.getTitle());
             sm.setSynopsis(doc.select("div[class=summary-text]").text());
             sm.setGenre(description(doc, "div[class=info]", "nero"));
             sm.setStatus(description(doc, "div[class=info]", "Status"));
@@ -56,8 +54,6 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
             byte[] cover = recoverCover(coverUrl, sm.getTitle());
             sm.setCover(cover);
             sm.setType(WorkType.MANGA);
-
-//            deleteFile(path);
 
             return sm;
         } catch (Exception e) {
@@ -88,18 +84,6 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
     }
 
     @Override
-    public boolean deleteFile(File path) {
-        try {
-            FileUtils.deleteDirectory(new File(String.valueOf(path)));
-            System.out.println("Sucesso ao deletar!");
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
-    }
-
-    @Override
     public String description(Document doc, String tag, String regen) {
         String[] aux = new String[1];
         List<Element> types = doc.select(tag).stream()
@@ -109,5 +93,12 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
         teste.forEach(t -> aux[0] = t);
 
         return aux[0];
+    }
+
+    public String getUrl() {
+        return url;
+    }
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

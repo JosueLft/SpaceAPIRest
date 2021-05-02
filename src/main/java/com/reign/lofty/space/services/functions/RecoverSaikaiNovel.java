@@ -22,8 +22,7 @@ import java.util.stream.Stream;
 
 public class RecoverSaikaiNovel extends Work implements ContentAccess,
                                                         SeparateDescription,
-                                                        CoverStorage,
-                                                        DeleteFile {
+                                                        CoverStorage {
 
     private Document doc;
     private String url = "https://saikaiscan.com.br/novels/reincarnation-of-the-strongest-sword-god-rssg/99";
@@ -46,7 +45,6 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
 
             RecoverSaikaiNovel sn = new RecoverSaikaiNovel();
             sn.setTitle(doc.select("h2").text());
-            File path = new File("src/main/resources/page/" + sn.getTitle());
             sn.setSynopsis(doc.select("div[class=summary-text]").text());
             sn.setGenre(description(doc, "div[class=info]", "nero"));
             sn.setStatus(description(doc, "div[class=info]", "Status"));
@@ -55,8 +53,6 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
             byte[] cover = recoverCover(coverUrl, sn.getTitle());
             sn.setCover(cover);
             sn.setType(WorkType.NOVEL);
-
-//            deleteFile(path);
 
             return sn;
         } catch (Exception e) {
@@ -84,18 +80,6 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
         }
 
         return new byte[0];
-    }
-
-    @Override
-    public boolean deleteFile(File path) {
-        try {
-            File f = path;
-            f.delete();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     @Override

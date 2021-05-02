@@ -28,9 +28,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private PageRepository pageRepository;
 
-    RecoverSaikaiManga sm = new RecoverSaikaiManga();
-    RecoverSaikaiNovel sn = new RecoverSaikaiNovel();
-    RecoverNeoxManga nm = new RecoverNeoxManga();
+    RecoverSaikaiManga sm = new RecoverSaikaiManga("https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/9");
+    RecoverSaikaiNovel sn = new RecoverSaikaiNovel("https://saikaiscan.com.br/novels/reincarnation-of-the-strongest-sword-god-rssg/99");
+    RecoverNeoxManga nm = new RecoverNeoxManga("https://neoxscans.net/manga/rtw-2347897123/");
 
     RecoverSaikaiMangaChapter smc = new RecoverSaikaiMangaChapter();
     RecoverSaikaiMangaPagesChapter smpc = new RecoverSaikaiMangaPagesChapter();

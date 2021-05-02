@@ -71,8 +71,8 @@ public class RecoverSaikaiMangaPagesChapter extends Work implements AccessPageCo
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             ImageIO.write(imagem, "JPEG", baos);
-            File f = path;
-            f.mkdir();
+//            File f = path;
+//            f.mkdir();
             byte[] cover = baos.toByteArray();
 //            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
 //            ImageIO.write(imagem, "JPEG", output);
