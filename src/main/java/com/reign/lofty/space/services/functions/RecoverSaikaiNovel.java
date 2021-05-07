@@ -1,10 +1,8 @@
 package com.reign.lofty.space.services.functions;
 
 import com.reign.lofty.space.entities.Work;
-import com.reign.lofty.space.entities.enums.WorkType;
-import com.reign.lofty.space.services.interfaces.CoverStorage;
 import com.reign.lofty.space.services.interfaces.ContentAccess;
-import com.reign.lofty.space.services.interfaces.DeleteFile;
+import com.reign.lofty.space.services.interfaces.CoverStorage;
 import com.reign.lofty.space.services.interfaces.SeparateDescription;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,8 +10,9 @@ import org.jsoup.nodes.Element;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.HttpURLConnection;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,8 +33,8 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
         this.url = url;
     }
 
-    public RecoverSaikaiNovel(Long id, String title, String synopsis, String genre, WorkType workType, String status, String distributedBy, byte[] cover) {
-        super(id, title, synopsis, genre, workType, status, distributedBy, cover);
+    public RecoverSaikaiNovel(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
+        super(id, title, synopsis, genre, type, status, distributedBy, cover);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
             URL coverUrl = new URL("https://saikaiscan.com.br/" + doc.select("div.cover img").attr("data-src"));
             byte[] cover = recoverCover(coverUrl, sn.getTitle());
             sn.setCover(cover);
-            sn.setType(WorkType.NOVEL);
+            sn.setType("Novel");
 
             return sn;
         } catch (Exception e) {

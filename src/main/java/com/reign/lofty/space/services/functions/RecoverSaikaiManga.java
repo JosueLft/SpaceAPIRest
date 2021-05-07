@@ -31,8 +31,8 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
 
     public RecoverSaikaiManga() {}
 
-    public RecoverSaikaiManga(Long id, String title, String synopsis, String genre, WorkType workType, String status, String distributedBy, byte[] cover) {
-        super(id, title, synopsis, genre, workType, status, distributedBy, cover);
+    public RecoverSaikaiManga(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
+        super(id, title, synopsis, genre, type, status, distributedBy, cover);
     }
 
     public RecoverSaikaiManga(String url){
@@ -53,7 +53,7 @@ public class RecoverSaikaiManga extends Work implements ContentAccess,
             URL coverUrl = new URL("https://saikaiscan.com.br/" + doc.select("div.cover img").attr("data-src"));
             byte[] cover = recoverCover(coverUrl, sm.getTitle());
             sm.setCover(cover);
-            sm.setType(WorkType.MANGA);
+            sm.setType("Manga");
 
             return sm;
         } catch (Exception e) {

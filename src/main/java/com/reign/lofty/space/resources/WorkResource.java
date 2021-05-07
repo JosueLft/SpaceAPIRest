@@ -36,7 +36,7 @@ public class WorkResource {
 
     @PostMapping
     public ResponseEntity<Work> insert(@RequestBody Work work) {
-        if(work.getType() == WorkType.MANGA) {
+        if(work.getType().equalsIgnoreCase("manga")) {
             System.err.println(work.toString());
             if(work.getDistributedBy().contains("Saikai")) {
                 RecoverSaikaiManga manga = new RecoverSaikaiManga(work.getTitle());
@@ -45,7 +45,7 @@ public class WorkResource {
                 RecoverNeoxManga manga = new RecoverNeoxManga(work.getTitle());
                 work = manga.accessContent();
             }
-        } else if(work.getType() == WorkType.NOVEL) {
+        } else if(work.getType().equalsIgnoreCase("novel")) {
             if(work.getDistributedBy().contains("Saikai")) {
                 RecoverSaikaiNovel novel = new RecoverSaikaiNovel(work.getTitle());
                 work = novel.accessContent();

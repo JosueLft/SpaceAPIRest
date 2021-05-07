@@ -22,7 +22,7 @@ public class Work implements Serializable {
     @Column(nullable = false)
     private String genre;
     @Column(nullable = false)
-    private Integer type;
+    private String type;
     @Column
     private String status;
     @Column(nullable = false)
@@ -35,12 +35,12 @@ public class Work implements Serializable {
 
     public Work() {}
 
-    public Work(Long id, String title, String synopsis, String genre, WorkType workType, String status, String distributedBy, byte[] cover) {
+    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
         this.id = id;
         this.title = title;
         this.synopsis = synopsis;
         this.genre = genre;
-        setType(workType);
+        this.type = type;
         this.status = status;
         this.distributedBy = distributedBy;
         this.cover = cover;
@@ -70,12 +70,11 @@ public class Work implements Serializable {
     public void setGenre(String genre) {
         this.genre = genre;
     }
-    public WorkType getType() {
-        return WorkType.valueOf(type);
+    public String getType() {
+        return type;
     }
-    public void setType(WorkType workType) {
-        if(workType != null)
-        this.type = workType.getCode();
+    public void setType(String type) {
+        this.type = type;
     }
     public String getStatus() {
         return status;

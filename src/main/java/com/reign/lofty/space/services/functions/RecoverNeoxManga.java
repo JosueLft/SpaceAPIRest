@@ -28,8 +28,8 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
         this.url = url;
     }
 
-    public RecoverNeoxManga(Long id, String title, String synopsis, String genre, WorkType workType, String status, String distributedBy, byte[] cover) {
-        super(id, title, synopsis, genre, workType, status, distributedBy, cover);
+    public RecoverNeoxManga(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
+        super(id, title, synopsis, genre, type, status, distributedBy, cover);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
             URL coverUrl = new URL(doc.select("div.summary_image img").attr("data-src"));
             byte[] cover = recoverCover(coverUrl, nm.getTitle());
             nm.setCover(cover);
-            nm.setType(WorkType.MANGA);
+            nm.setType("Manga");
 
             return nm;
         } catch (Exception e) {
