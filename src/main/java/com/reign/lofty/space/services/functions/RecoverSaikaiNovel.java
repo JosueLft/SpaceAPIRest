@@ -7,6 +7,7 @@ import com.reign.lofty.space.services.interfaces.SeparateDescription;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64Encoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,6 +15,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,7 +36,7 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
         this.url = url;
     }
 
-    public RecoverSaikaiNovel(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
+    public RecoverSaikaiNovel(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, String cover) {
         super(id, title, synopsis, genre, type, status, distributedBy, cover);
     }
 
@@ -49,7 +52,7 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
             sn.setStatus(description(doc, "div[class=info]", "Status"));
             sn.setDistributedBy("Saikai Scan");
             URL coverUrl = new URL("https://saikaiscan.com.br/" + doc.select("div.cover img").attr("data-src"));
-            byte[] cover = recoverCover(coverUrl, sn.getTitle());
+            String cover = recoverCover(coverUrl, sn.getTitle());
             sn.setCover(cover);
             sn.setType("Novel");
 
@@ -61,7 +64,7 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
     }
 
     @Override
-    public byte[] recoverCover(URL coverUrl, String workName) {
+    public String recoverCover(URL coverUrl, String workName) {
         OutputStream output = null;
         try {
             BufferedImage imagem = null;
@@ -73,12 +76,12 @@ public class RecoverSaikaiNovel extends Work implements ContentAccess,
 //            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
 //            ImageIO.write(imagem, "JPEG", output);
 
-            return cover;
+            return new String(cover, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return new byte[0];
+        return "";
     }
 
     @Override

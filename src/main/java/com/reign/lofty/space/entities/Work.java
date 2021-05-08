@@ -21,21 +21,21 @@ public class Work implements Serializable {
     private String synopsis;
     @Column(nullable = false)
     private String genre;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String type;
-    @Column
+    @Column(length = 25)
     private String status;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 25)
     private String distributedBy;
-    @Column(length = 1000000)
-    private byte[] cover;
+    @Column(length = 10000)
+    private String cover;
 
     @OneToMany(mappedBy = "work")
     private List<Chapter> chapters = new ArrayList<>();
 
     public Work() {}
 
-    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
+    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, String cover) {
         this.id = id;
         this.title = title;
         this.synopsis = synopsis;
@@ -88,10 +88,10 @@ public class Work implements Serializable {
     public void setDistributedBy(String distributedBy) {
         this.distributedBy = distributedBy;
     }
-    public byte[] getCover() {
+    public String getCover() {
         return cover;
     }
-    public void setCover(byte[] cover) {
+    public void setCover(String cover) {
         this.cover = cover;
     }
     public List<Chapter> getChapters() {
