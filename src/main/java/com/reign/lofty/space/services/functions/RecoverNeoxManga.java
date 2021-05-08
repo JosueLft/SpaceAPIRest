@@ -1,18 +1,19 @@
 package com.reign.lofty.space.services.functions;
 
 import com.reign.lofty.space.entities.Work;
-import com.reign.lofty.space.services.interfaces.ContentAccess;
+import com.reign.lofty.space.entities.enums.WorkType;
 import com.reign.lofty.space.services.interfaces.CoverStorage;
+import com.reign.lofty.space.services.interfaces.ContentAccess;
+import com.reign.lofty.space.services.interfaces.DeleteFile;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class RecoverNeoxManga extends Work implements ContentAccess,
                                                       CoverStorage {
@@ -27,7 +28,7 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
         this.url = url;
     }
 
-    public RecoverNeoxManga(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, String cover) {
+    public RecoverNeoxManga(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
         super(id, title, synopsis, genre, type, status, distributedBy, cover);
     }
 
@@ -43,7 +44,7 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
             nm.setStatus(doc.select("div.summary-content").last().text());
             nm.setDistributedBy("Neox Scan");
             URL coverUrl = new URL(doc.select("div.summary_image img").attr("data-src"));
-            String cover = recoverCover(coverUrl, nm.getTitle());
+            byte[] cover = recoverCover(coverUrl, nm.getTitle());
             nm.setCover(cover);
             nm.setType("Manga");
 
@@ -55,7 +56,7 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
     }
 
     @Override
-    public String recoverCover(URL coverUrl, String workName) {
+    public byte[] recoverCover(URL coverUrl, String workName) {
         OutputStream output = null;
         try {
             BufferedImage imagem = null;
@@ -67,11 +68,11 @@ public class RecoverNeoxManga extends Work implements ContentAccess,
 //            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
 //            ImageIO.write(imagem, "JPEG", output);
 
-            return new String(cover, StandardCharsets.UTF_8);
+            return cover;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return "";
+        return new byte[0];
     }
 }

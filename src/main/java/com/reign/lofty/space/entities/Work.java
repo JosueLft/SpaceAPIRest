@@ -27,15 +27,15 @@ public class Work implements Serializable {
     private String status;
     @Column(nullable = false, length = 25)
     private String distributedBy;
-    @Column(length = 10000)
-    private String cover;
+    @Column(length = 1000000)
+    private byte[] cover;
 
     @OneToMany(mappedBy = "work")
     private List<Chapter> chapters = new ArrayList<>();
 
     public Work() {}
 
-    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, String cover) {
+    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
         this.id = id;
         this.title = title;
         this.synopsis = synopsis;
@@ -88,10 +88,10 @@ public class Work implements Serializable {
     public void setDistributedBy(String distributedBy) {
         this.distributedBy = distributedBy;
     }
-    public String getCover() {
+    public byte[] getCover() {
         return cover;
     }
-    public void setCover(String cover) {
+    public void setCover(byte[] cover) {
         this.cover = cover;
     }
     public List<Chapter> getChapters() {
