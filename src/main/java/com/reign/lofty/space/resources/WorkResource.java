@@ -37,7 +37,6 @@ public class WorkResource {
     @PostMapping
     public ResponseEntity<Work> insert(@RequestBody Work work) {
         if(work.getType().equalsIgnoreCase("manga")) {
-            System.err.println(work.toString());
             if(work.getDistributedBy().contains("Saikai")) {
                 RecoverSaikaiManga manga = new RecoverSaikaiManga(work.getTitle());
                 work = manga.accessContent();

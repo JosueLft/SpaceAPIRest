@@ -28,7 +28,14 @@ public class RecoverSaikaiMangaPagesChapter extends Work implements AccessPageCo
                                                                VerifyChapterTitle{
 
     Document doc;
-    String url = "https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/post/capitulo-3225-derrubando-um-ao-outro/4499";
+    String url;
+
+    public RecoverSaikaiMangaPagesChapter() {}
+
+    public RecoverSaikaiMangaPagesChapter(String url) {
+        this.url = url;
+    }
+
 
     @Override
     public List<Page> accessContent(String workName) {
@@ -53,8 +60,7 @@ public class RecoverSaikaiMangaPagesChapter extends Work implements AccessPageCo
                 p.setWorkChapterName(workName + chapterTitle + "Page" + p.getNumberPage());
                 chapter.getPages().add(p);
             }
-
-//            deleteFile(path);
+            System.err.println(chapter.getPages().size());
             return chapter.getPages();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,19 +70,12 @@ public class RecoverSaikaiMangaPagesChapter extends Work implements AccessPageCo
 
     @Override
     public byte[] page(URL pageUrl, String workName, File path) {
-        OutputStream output = null;
         try {
             BufferedImage imagem = null;
             imagem = ImageIO.read(pageUrl);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
             ImageIO.write(imagem, "JPEG", baos);
-//            File f = path;
-//            f.mkdir();
             byte[] cover = baos.toByteArray();
-//            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
-//            ImageIO.write(imagem, "JPEG", output);
-
             return cover;
         } catch (IOException e) {
             e.printStackTrace();

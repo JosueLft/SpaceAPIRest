@@ -1,6 +1,7 @@
 package com.reign.lofty.space.entities;
 
 import com.reign.lofty.space.entities.enums.WorkType;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,10 +31,20 @@ public class Work implements Serializable {
     @Column(length = 1000000)
     private byte[] cover;
 
-    @OneToMany(mappedBy = "work")
+    @OneToMany(mappedBy = "work", fetch = FetchType.LAZY)
     private List<Chapter> chapters = new ArrayList<>();
 
     public Work() {}
+
+    public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy) {
+        this.id = id;
+        this.title = title;
+        this.synopsis = synopsis;
+        this.genre = genre;
+        this.type = type;
+        this.status = status;
+        this.distributedBy = distributedBy;
+    }
 
     public Work(Long id, String title, String synopsis, String genre, String type, String status, String distributedBy, byte[] cover) {
         this.id = id;
@@ -105,7 +116,8 @@ public class Work implements Serializable {
                         "\nStatus: %s" +
                         "\nDistribuido por: %s" +
                         "\nGênero: %s" +
-                        "\nSinopse: %s\n\n",
+                        "\nSinopse: %s\n\n" +
+                        "Capitulos: \n\n" + this.getChapters(),
                 title, type, status, distributedBy, genre, synopsis);
     }
 }

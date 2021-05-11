@@ -20,7 +20,7 @@ public class Chapter implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String title;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "GMT")
     private Instant moment;
     @Column(nullable = true)
     private String contentChapter;
@@ -31,7 +31,7 @@ public class Chapter implements Serializable {
     @JoinColumn(name = "work_id")
     private Work work;
 
-    @OneToMany(mappedBy = "chapter")
+    @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY)
     private List<Page> pages = new ArrayList<>();
 
     public Chapter() {}
@@ -88,5 +88,14 @@ public class Chapter implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Titulo: %s" +
+                        "\nMoment: %s" +
+                        "\nContentChapter: %s" +
+                        "\nWork: \n\n" + work,
+                title, moment, contentChapter);
     }
 }

@@ -27,7 +27,13 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
                                                                VerifyChapterTitle{
 
     Document doc;
-    String url = "https://neoxscans.net/manga/rtw-2347897123/cap-252/";
+    String url;
+
+    public RecoverNeoxMangaPagesChapter() {}
+
+    public RecoverNeoxMangaPagesChapter(String url) {
+        this.url = url;
+    }
 
     @Override
     public List<Page> accessContent(String workName) {
@@ -61,7 +67,6 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
 
     @Override
     public byte[] page(URL pageUrl, String workName, File path) {
-        OutputStream output = null;
         try {
             BufferedImage imagem = null;
             imagem = ImageIO.read(pageUrl);
@@ -69,8 +74,6 @@ public class RecoverNeoxMangaPagesChapter extends Work implements AccessPageCont
 
             ImageIO.write(imagem, "JPEG", baos);
             byte[] cover = baos.toByteArray();
-//            output = new FileOutputStream(path + "/" + workName + "Chapter.JPEG");
-//            ImageIO.write(imagem, "JPEG", output);
             return cover;
         } catch (IOException e) {
             e.printStackTrace();

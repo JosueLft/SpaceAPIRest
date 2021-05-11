@@ -3,7 +3,6 @@ package com.reign.lofty.space.config;
 import com.reign.lofty.space.entities.Chapter;
 import com.reign.lofty.space.entities.Page;
 import com.reign.lofty.space.entities.Work;
-import com.reign.lofty.space.entities.enums.WorkType;
 import com.reign.lofty.space.repositories.ChapterRepository;
 import com.reign.lofty.space.repositories.PageRepository;
 import com.reign.lofty.space.repositories.WorkRepository;
@@ -32,10 +31,10 @@ public class TestConfig implements CommandLineRunner {
     RecoverSaikaiNovel sn = new RecoverSaikaiNovel("https://saikaiscan.com.br/novels/reincarnation-of-the-strongest-sword-god-rssg/99");
     RecoverNeoxManga nm = new RecoverNeoxManga("https://neoxscans.net/manga/rtw-2347897123/");
 
-    RecoverSaikaiMangaChapter smc = new RecoverSaikaiMangaChapter();
-    RecoverSaikaiMangaPagesChapter smpc = new RecoverSaikaiMangaPagesChapter();
-    RecoverNeoxMangaChapter nmc = new RecoverNeoxMangaChapter();
-    RecoverNeoxMangaPagesChapter nmpc = new RecoverNeoxMangaPagesChapter();
+    RecoverSaikaiMangaChapter smc = new RecoverSaikaiMangaChapter("https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/post/capitulo-3225-derrubando-um-ao-outro/4499");
+    RecoverSaikaiMangaPagesChapter smpc = new RecoverSaikaiMangaPagesChapter("https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/post/capitulo-3225-derrubando-um-ao-outro/4499");
+    RecoverNeoxMangaChapter nmc = new RecoverNeoxMangaChapter("https://neoxscans.net/manga/rtw-2347897123/cap-252/");
+    RecoverNeoxMangaPagesChapter nmpc = new RecoverNeoxMangaPagesChapter("https://neoxscans.net/manga/rtw-2347897123/cap-252/");
 
     @Override
     public void run(String... args) throws Exception {
@@ -47,8 +46,8 @@ public class TestConfig implements CommandLineRunner {
         Work w2 = new Work(null, saikaiNovel.getTitle(), saikaiNovel.getSynopsis(), saikaiNovel.getGenre(), saikaiNovel.getType(), saikaiNovel.getStatus(), saikaiNovel.getDistributedBy(), saikaiNovel.getCover());
         Work w3 = new Work(null, neoxManga.getTitle(), neoxManga.getSynopsis(), neoxManga.getGenre(), neoxManga.getType(), neoxManga.getStatus(), neoxManga.getDistributedBy(), neoxManga.getCover());
 
-        Chapter saikaiMangaChapter = smc.accessContent(w1.getTitle());
-        Chapter neoxMangaChapter = nmc.accessContent(w3.getTitle());
+        Chapter saikaiMangaChapter = smc.accessContent(w1);
+        Chapter neoxMangaChapter = nmc.accessContent(w3);
 
         List<Page> saikaiPages = smpc.accessContent(w1.getTitle());
         List<Page> neoxPages = nmpc.accessContent(w3.getTitle());

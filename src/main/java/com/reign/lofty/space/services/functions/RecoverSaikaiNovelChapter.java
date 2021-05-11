@@ -6,7 +6,6 @@ import com.reign.lofty.space.services.interfaces.AccessChapterContent;
 import com.reign.lofty.space.services.interfaces.VerifyChapterTitle;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -14,14 +13,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class RecoverNeoxMangaChapter extends Work implements AccessChapterContent {
+public class RecoverSaikaiNovelChapter extends Work implements AccessChapterContent {
 
-    Document doc;
-    String url;
+    private Document doc;
+    private String url;
 
-    public RecoverNeoxMangaChapter() {}
+    public RecoverSaikaiNovelChapter() {}
 
-    public RecoverNeoxMangaChapter(String url) {
+    public RecoverSaikaiNovelChapter(String url) {
         this.url = url;
     }
 
@@ -30,10 +29,11 @@ public class RecoverNeoxMangaChapter extends Work implements AccessChapterConten
         try {
             doc = Jsoup.connect(url).get();
 
-            String chapterTitle = doc.select("li.active").text();
+            String chapterTitle = doc.select("h2.project-subtitle").text();
+            String contentChapter = doc.select("h4.project-credits").text() + "\n\n\n";
+            contentChapter += doc.select("div.full-text").text();
             Work w = new Work(work.getId(), work.getTitle(), work.getSynopsis(), work.getGenre(), work.getType(), work.getStatus(), work.getDistributedBy());
-            Chapter chapter = new Chapter(null, chapterTitle, Instant.now(), chapterTitle, w);
-            chapter.setTitle(chapterTitle);
+            Chapter chapter = new Chapter(null, chapterTitle, Instant.now(), contentChapter, w);
             return chapter;
         } catch (IOException e) {
             e.printStackTrace();

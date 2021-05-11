@@ -19,7 +19,7 @@ public class Page {
     private String numberPage;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_id")
     private Chapter chapter;
 
@@ -80,5 +80,11 @@ public class Page {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public String toString() {
+        return String.format("Titulo: %s" +
+                        "\nPagina: %s",
+                workChapterName, numberPage);
     }
 }

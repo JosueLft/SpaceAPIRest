@@ -1,21 +1,14 @@
 package com.reign.lofty.space.services.functions;
 
 import com.reign.lofty.space.entities.Chapter;
-import com.reign.lofty.space.entities.Page;
 import com.reign.lofty.space.entities.Work;
 import com.reign.lofty.space.services.interfaces.AccessChapterContent;
-import com.reign.lofty.space.services.interfaces.DeleteFile;
-import com.reign.lofty.space.services.interfaces.PageStorage;
 import com.reign.lofty.space.services.interfaces.VerifyChapterTitle;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,18 +16,23 @@ import java.util.stream.Collectors;
 public class RecoverSaikaiMangaChapter extends Work implements AccessChapterContent,
                                                                VerifyChapterTitle{
 
-    Document doc;
-    String url = "https://saikaiscan.com.br/manhuas/tales-of-demons-and-gods-tdg/post/capitulo-3225-derrubando-um-ao-outro/4499";
+    private Document doc;
+    private String url;
+
+    public RecoverSaikaiMangaChapter() {}
+
+    public RecoverSaikaiMangaChapter(String url) {
+        this.url = url;
+    }
 
     @Override
-    public Chapter accessContent(String workName) {
+    public Chapter accessContent(Work work) {
         try {
-            Chapter chapter = new Chapter();
             doc = Jsoup.connect(url).get();
 
             String chapterTitle = chapterTitle(doc.select("div.images-block img").attr("title"));
-
-            chapter.setTitle(chapterTitle);
+            Work w = new Work(work.getId(), work.getTitle(), work.getSynopsis(), work.getGenre(), work.getType(), work.getStatus(), work.getDistributedBy());
+            Chapter chapter = new Chapter(null, chapterTitle, Instant.now(), chapterTitle, w);
             return chapter;
         } catch (IOException e) {
             e.printStackTrace();
